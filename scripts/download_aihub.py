@@ -9,7 +9,9 @@ from typing import Any
 
 import yaml
 
-from src.utils.config import project_root
+
+def project_root() -> Path:
+    return Path(__file__).resolve().parents[1]
 
 
 def load_keys(path: Path | None = None) -> dict[str, Any]:
