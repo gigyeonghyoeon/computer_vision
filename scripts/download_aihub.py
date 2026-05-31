@@ -40,8 +40,11 @@ def _iter_download_items(cfg: dict) -> list[tuple[str, int | str, dict]]:
         for entry in cfg.get(key_field) or []:
             if not entry.get("download") or entry.get("key") in (None, "null", ""):
                 continue
-            sub = entry.get("name") or "data"
-            items.append((f"downloads/{name}/{sub}", entry["key"], entry))
+            split = entry.get("split", "data")
+            kind = entry.get("kind", "file")
+            fname = entry.get("file", entry.get("name", "data"))
+            safe = fname.replace(".zip", "").replace(" ", "_")[:40]
+            items.append((f"downloads/{name}/{split}/{kind}_{safe}", entry["key"], entry))
 
     return items
 
