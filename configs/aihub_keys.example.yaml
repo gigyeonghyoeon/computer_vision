@@ -1,0 +1,49 @@
+# AI Hub 파일키 템플릿 — configs/aihub_keys.yaml 로 복사 후 key 입력
+# aihub_keys.yaml 은 .gitignore (GitHub에 올라가지 않음)
+
+# ── ① CCTV 이상행동 (test only) ──
+# 행동 → 촬영환경(실내원본/실내크로마키/실외) → zip마다 key 1개
+anomaly:
+  assault:  # 폭행
+    - env: indoor_original
+      file: ""
+      key: null
+      size_gb: null
+      download: false   # true = download 스크립트 대상
+    - env: indoor_chromakey
+      file: inside_croki_01.zip
+      key: null
+      size_gb: null
+      download: false
+    - env: outdoor
+      file: ""
+      key: null
+      size_gb: null
+      download: false
+  theft:    # 절도
+    - env: indoor_original
+      file: ""
+      key: null
+      download: false
+  intrusion:  # 침입
+    - env: outdoor
+      file: ""
+      key: null
+      download: false
+  # faint, damage 등 추가 가능
+
+# ── ② 유동인구 분석 CCTV (#489) ──
+pedestrian_cctv:
+  - name: ""
+    key: null
+    size_gb: null
+    download: false
+
+# ── ③ 공원 CCTV 정상행위 (#477) ──
+park_normal:
+  - name: ""
+    key: null
+    size_gb: null
+    download: false
+
+# download: true 인 항목만 scripts/download_aihub.py 가 받음
