@@ -1,6 +1,7 @@
 """configs/aihub_keys.yaml 로드 + aihubshell 다운로드.
 
-AI Hub v25+: -filekey (파일키) + -datasetkey (데이터셋키) + -o (저장경로)
+AI Hub aihubshell: -filekey + -datasetkey (+ -aihubapikey)
+저장 경로 옵션 없음 → 대상 폴더에서 실행 (cwd)
 마이페이지 key 숫자(49825 등) = filekey
 """
 
@@ -75,14 +76,23 @@ def _dataset_key(cfg: dict, group: str, entry: dict) -> str:
     keys = cfg.get("dataset_keys") or {}
     dk = keys.get(group)
     if not dk:
+        hints = {
+            "anomaly": ("171", "이상행동 CCTV"),
+            "park_normal": ("477", "공원"),
+            "pedestrian_cctv": ("489", "유동"),
+        }
+        mode_l_key, grep_word = hints.get(group, ("?", group))
         raise ValueError(
             f"dataset_keys.{group} 가 비어 있습니다.\n"
-            f"  aihubshell -mode l  로 데이터셋 번호 확인 후 configs/aihub_keys.yaml 에 입력"
+            f"  1) aihubshell -mode l | grep {grep_word}\n"
+            f"  2) configs/aihub_keys.yaml 의 dataset_keys.{group} 에 숫자 입력\n"
+            f"     (예: {mode_l_key})\n"
+            f"  3) 확인: aihubshell -mode l -datasetkey {mode_l_key} | head"
         )
     return str(dk)
 
 
-def _build_cmd(cfg: dict, datasetkey: str, filekey: str, dest: Path) -> list[str]:
+def _build_cmd(cfg: dict, datasetkey: str, filekey: str) -> list[str]:
     cmd = [
         "aihubshell",
         "-mode",
@@ -91,8 +101,6 @@ def _build_cmd(cfg: dict, datasetkey: str, filekey: str, dest: Path) -> list[str
         datasetkey,
         "-filekey",
         filekey,
-        "-o",
-        str(dest),
     ]
     apikey = (cfg.get("aihub") or {}).get("apikey") or os.environ.get("AIHUB_API_KEY")
     if apikey:
@@ -111,14 +119,14 @@ def download_all(dry_run: bool = False) -> None:
     for dest_rel, filekey, group, meta in items:
         dest = root / dest_rel
         datasetkey = _dataset_key(cfg, group, meta)
-        cmd = _build_cmd(cfg, datasetkey, filekey, dest)
+        cmd = _build_cmd(cfg, datasetkey, filekey)
         label = meta.get("file") or meta.get("name", "")
         print(f"→ datasetkey={datasetkey} filekey={filekey}  dest={dest}  ({label})")
         if dry_run:
-            print("  ", " ".join(cmd))
+            print(f"   cd {dest} && {' '.join(cmd)}")
             continue
         dest.mkdir(parents=True, exist_ok=True)
-        subprocess.run(cmd, check=True)
+        subprocess.run(cmd, check=True, cwd=dest)
 
 
 def main() -> None:

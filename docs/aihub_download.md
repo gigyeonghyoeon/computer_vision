@@ -16,26 +16,28 @@ aihubshell -mode l
 
 목록에서 찾기:
 
-- `19. 이상행동CCTV` → 숫자를 `dataset_keys.anomaly` 에
-- `173. 공원 ...` → `dataset_keys.park_normal`
-- `154. 유동인구 ...` → `dataset_keys.pedestrian_cctv`
+- `171, 이상행동 CCTV 영상` → `dataset_keys.anomaly`
+- `477, 공원 ...` → `dataset_keys.park_normal`
+- `489, 유동 인구 ...` → `dataset_keys.pedestrian_cctv`
 
 `configs/aihub_keys.yaml` 상단:
 
 ```yaml
 dataset_keys:
-  anomaly: 12345
-  park_normal: 67890
-  pedestrian_cctv: 11111
+  anomaly: 171
+  park_normal: 477
+  pedestrian_cctv: 489
 ```
 
 ## 수동 다운로드 테스트 (1개 파일)
 
 ```bash
 cd ~/computer_vision
-mkdir -p data/raw/test
-aihubshell -mode d -datasetkey <DATASETKEY> -filekey 53599 -o data/raw/test
+mkdir -p data/raw/test && cd data/raw/test
+aihubshell -mode d -datasetkey 477 -filekey 53599
 ```
+
+> aihubshell v25에는 `-o`/`-localdir` 없음. **다운로드 받을 폴더로 cd 한 뒤** 실행.
 
 ## 스크립트
 
@@ -44,5 +46,5 @@ python scripts/download_aihub.py --dry-run
 python scripts/download_aihub.py
 ```
 
-v25+ 옵션: `-o` (저장 경로), `-filekey`, `-datasetkey`  
-(`-localdir` 은 사용 안 함)
+옵션: `-filekey`, `-datasetkey`, `-aihubapikey`  
+저장 위치 = **명령 실행 디렉터리** (스크립트가 dest 폴더에서 실행)
