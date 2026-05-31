@@ -1,0 +1,11 @@
+# AWS EC2 GPU 학습용
+project:
+  device: cuda
+
+autoencoder:
+  batch_size: 32
+  epochs: 50
+
+patchcore:
+  batch_size: 32
+  coreset_ratio: 0.1

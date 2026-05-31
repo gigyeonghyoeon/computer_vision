@@ -1,0 +1,19 @@
+# UCF101 / KTH 정상 행동 클래스 (학습용)
+ucf101:
+  - Typing
+  - WritingOnBoard
+  - WalkingWithDog
+  - Haircut
+  - ApplyEyeMakeup
+  - PlayingPiano
+  - ShavingBeard
+  - BandMarching
+  - Lunges
+
+kth:
+  - walking
+  - jogging
+  - running
+  - boxing
+  - handclapping
+  - handwaving

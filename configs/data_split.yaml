@@ -1,0 +1,36 @@
+# Train / Val / Test split 규칙 (영상 ID 단위)
+
+# dataset 폴더명 → label (0=정상, 1=이상), splittable 여부
+datasets:
+  ucf101:
+    label: 0
+    splittable: false   # 항상 train
+    role: "일반 행동 학습"
+  kth:
+    label: 0
+    splittable: false   # 항상 train
+    role: "일반 행동 학습"
+  park_normal:
+    label: 0
+    splittable: true    # 70/15/15 split
+    role: "CCTV 정상 — 학습/val/test"
+  pedestrian_cctv:
+    label: 0
+    splittable: true    # 70/15/15 (test 정상은 공원 정상 사용)
+    role: "CCTV 정상 — 학습/val 보조"
+  anomaly:
+    label: 1
+    splittable: false   # 항상 test
+    role: "CCTV 이상 — test only"
+
+# split 비율 (splittable dataset에만 적용)
+ratios:
+  train: 0.70
+  val: 0.15
+  test: 0.15
+
+# val 용도: threshold 설정 (정상 score 95th percentile)
+# test 구성: park_normal test (정상) + anomaly (이상)
+
+# UCF101/KTH 클래스 선정 → configs/normal_classes.yaml 참고
+# raw 배치 구조 → data/raw/README.md 참고
