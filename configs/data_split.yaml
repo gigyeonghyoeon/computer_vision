@@ -1,36 +1,41 @@
-# Train / Val / Test split 규칙 (영상 ID 단위)
+# AI Hub CCTV 3종 — Train/Val/Test (영상 ID 단위)
 
-# dataset 폴더명 → label (0=정상, 1=이상), splittable 여부
+# 본 프로젝트 핵심 데이터 (AI Hub)
 datasets:
-  ucf101:
-    label: 0
-    splittable: false   # 항상 train
-    role: "일반 행동 학습"
-  kth:
-    label: 0
-    splittable: false   # 항상 train
-    role: "일반 행동 학습"
-  park_normal:
-    label: 0
-    splittable: true    # 70/15/15 split
-    role: "CCTV 정상 — 학습/val/test"
-  pedestrian_cctv:
-    label: 0
-    splittable: true    # 70/15/15 (test 정상은 공원 정상 사용)
-    role: "CCTV 정상 — 학습/val 보조"
   anomaly:
     label: 1
-    splittable: false   # 항상 test
-    role: "CCTV 이상 — test only"
+    splittable: false
+    aihub_sn: "이용신청 데이터셋"
+    role: "CCTV 이상행동 — test only"
+  pedestrian_cctv:
+    label: 0
+    splittable: true
+    aihub_sn: 489
+    name: "유동인구 분석을 위한 CCTV 영상 데이터"
+    role: "상권 CCTV 정상 — train/val"
+  park_normal:
+    label: 0
+    splittable: true
+    aihub_sn: 477
+    name: "공원 주요시설 및 불법행위 감시 CCTV (정상행위만)"
+    role: "공원 CCTV 정상 — train/val/test"
 
-# split 비율 (splittable dataset에만 적용)
+# 선택 보조 (필수 아님)
+optional:
+  ucf101:
+    label: 0
+    splittable: false
+    role: "일반 행동 학습 보조"
+  kth:
+    label: 0
+    splittable: false
+    role: "일반 행동 학습 보조"
+
 ratios:
   train: 0.70
   val: 0.15
   test: 0.15
 
-# val 용도: threshold 설정 (정상 score 95th percentile)
-# test 구성: park_normal test (정상) + anomaly (이상)
-
-# UCF101/KTH 클래스 선정 → configs/normal_classes.yaml 참고
-# raw 배치 구조 → data/raw/README.md 참고
+# train: pedestrian_cctv + park_normal (정상만)
+# val:   holdout → threshold 95th percentile
+# test:  park_normal (정상) + anomaly (이상)
